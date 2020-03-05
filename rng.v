@@ -15,9 +15,9 @@ module rng(input clk, input [7:0] seed, output [7:0] randomnumber);
     wire [31:0] s2;
     wire [31:0] s3;
 
-    assign s1 = state << 13;
-    assign s2 = s1 >> 17;
-    assign s3 = s2 << 5;
+    assign s1 = state ^ (state << 13);
+    assign s2 = s1 ^ (s1 >> 17);
+    assign s3 = s2 ^ (s2 << 5);
 
     always @(posedge clk)
     begin
