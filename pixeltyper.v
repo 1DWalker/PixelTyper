@@ -1,6 +1,7 @@
 module pixeltyper(
 		CLOCK_50, 
-		SW, KEY, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5
+		SW, KEY, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5,
+		
 		VGA_CLK,   						//	VGA Clock
 		VGA_HS,							//	VGA H_SYNC
 		VGA_VS,							//	VGA V_SYNC
@@ -12,8 +13,9 @@ module pixeltyper(
 	);
 	input CLOCK_50;
 	input [3:0] KEY;
+	input [19:0] SW;
 	output[9:0] LEDR;
-	output [7:0] HEX0, HEX1, HEX2, HEX3, HEX4, HEX5
+	output [7:0] HEX0, HEX1, HEX2, HEX3, HEX4, HEX5;
 	
 	output			VGA_CLK;   				//	VGA Clock
 	output			VGA_HS;					//	VGA H_SYNC
@@ -63,5 +65,8 @@ module pixeltyper(
 			.data(ram_data),
 			.wren(ram_wren),
 			.q(ram_dataout)
-	)
+	);
+	
+	wire done;
+	draw_word(0, CLOCK_50, SW[0], SW[1], vga_x, vga_y, vga_colour, done);
 endmodule

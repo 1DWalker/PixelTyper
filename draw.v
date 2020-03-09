@@ -7,12 +7,16 @@ module draw_word(
 	input delete,
 	output [2:0] draw_x,
 	output [2:0] draw_y,
-	output [3:0] draw_colour,
-	output done;
+	output [2:0] colour,
+	output done
 	);
 	
+	wire prev_done;
+	draw_character(0, clk, go, delete, draw_x, draw_y, colour, prev_done);
 	
-
+	wire draw_x_2 = draw_x + 8;
+	wire draw_y_2 = draw_y + 8;
+	draw_character(0, clk, prev_done, delete, draw_x_2, draw_y_2, colour, done);
 endmodule
 
 /*
@@ -26,7 +30,7 @@ module draw_character(
 	input delete, // high if the character is to be deleted
 	output [2:0] draw_x, // relative to top left corner 
 	output [2:0] draw_y, // relative to top left corner
-	output [3:0] colour,
+	output [2:0] colour,
 	output done
 	);
 	
@@ -36,10 +40,10 @@ module draw_character(
 	assign colour = delete && 3'b000 || ~delete && 3'b111;
 endmodule
 
-module square(input clk, input go, output [2:0] x, output [2:0] y, output done);
-    reg done = 1'b1;
+module square(input clk, input go, output [2:0] x, output [2:0] y, output reg done);
+	 initial done = 1'b0;
 	 
-	 reg state[5:0];
+	 reg [5:0] state;
     assign x = state[2:0];
     assign y = state[5:3];
 
@@ -50,7 +54,7 @@ module square(input clk, input go, output [2:0] x, output [2:0] y, output done);
 			state <= 0;
 		end
 		else begin
-			if (state == 6'111111)
+			if (state == 6'b111111)
 				 done <= 1'b1;
 			if (done == 1'b0) 
 				 state <= state + 1'b1;
