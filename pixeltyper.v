@@ -98,20 +98,23 @@ module pixeltyper(
 	hex_display(shift_x, HEX4);
 	
 	// initialize ram with some test values
-	ram_initialize(ram_	// ram wires 
-	wire [4:0] ram_address;
-	wire [3:0] ram_data;
-	wire ram_wren;
-	wire [3:0] ram_dataout;address, ram_data, ram_wren);
+	ram_initialize(CLOCK_50, ram_address, ram_data, ram_wren);
 endmodule
 	
 module ram_initialize(
+	input clk,
 	output [4:0] ram_address,
 	output [3:0] ram_data, 
 	output ram_wren,
 );
-
-
+	
+	reg [5:0] state;
+	initial state = 0;
+	
+	always @(posedge clk) begin
+		if (clk == 1'b1) 
+			state <= state + 1;
+	end
 endmodule
 
 module hex_display(IN, OUT);
