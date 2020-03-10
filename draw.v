@@ -1,22 +1,33 @@
 
 
 module draw_word(
+	input sh,
 	input [3:0] word_id, 
 	input clk,
 	input go,
 	input delete,
-	output [2:0] draw_x,
-	output [2:0] draw_y,
+	output [7:0] draw_x,
+	output [6:0] draw_y,
 	output [2:0] colour,
-	output done
+	output done,
+	output reg [6:0] shift_x
 	);
 	
-	wire prev_done;
-	draw_character(0, clk, go, delete, draw_x, draw_y, colour, prev_done);
+	//reg [2:0] shift_x;
+	initial shift_x = 7'b0000000;
 	
-	wire draw_x_2 = draw_x + 8;
-	wire draw_y_2 = draw_y + 8;
-	draw_character(0, clk, prev_done, delete, draw_x_2, draw_y_2, colour, done);
+	wire [2:0] x;
+	
+	assign draw_x = x + shift_x;
+	wire prev_done;
+	assign done = prev_done;
+	
+	draw_character(0, clk, go, delete, x, draw_y, colour, prev_done);
+	
+	always @(posedge prev_done) begin
+		if (prev_done == 1'b1)
+			shift_x <= shift_x + 8;
+	end
 endmodule
 
 /*
@@ -47,17 +58,16 @@ module square(input clk, input go, output [2:0] x, output [2:0] y, output reg do
     assign x = state[2:0];
     assign y = state[5:3];
 
-    always @(posedge clk, posedge go)
+    always @(posedge clk)
 	 begin
-		if (go == 1'b1) begin
+	 	if (go == 1'b1 && done == 1'b1) begin
 			done <= 1'b0;
 			state <= 0;
 		end
-		else begin
-			if (state == 6'b111111)
-				 done <= 1'b1;
-			if (done == 1'b0) 
-				 state <= state + 1'b1;
-		end
+		
+		if (state == 6'b111111)
+			 done <= 1'b1;
+		if (done == 1'b0) 
+			 state <= state + 1'b1;
     end
 endmodule

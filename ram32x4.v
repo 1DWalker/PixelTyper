@@ -97,7 +97,7 @@ module ram32x4 (
 		altsyncram_component.power_up_uninitialized = "FALSE",
 		altsyncram_component.read_during_write_mode_port_a = "NEW_DATA_NO_NBE_READ",
 		altsyncram_component.widthad_a = 5,
-		altsyncram_component.width_a = 4,
+		altsyncram_component.width_a = 128,
 		altsyncram_component.width_byteena_a = 1;
 
 
